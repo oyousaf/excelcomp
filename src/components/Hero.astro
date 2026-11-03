@@ -1,0 +1,71 @@
+---
+import Icon from "./Icon.astro";
+import MatrixRain from "./MatrixRain.astro";
+import RepairTicket from "./RepairTicket.astro";
+import { business } from "@/data/business";
+---
+
+<section class="relative isolate overflow-hidden border-b-2 border-edge" aria-labelledby="hero-title">
+  <div class="absolute inset-y-0 right-0 -z-10 w-full lg:w-3/5" aria-hidden="true">
+    <MatrixRain />
+  </div>
+  <div class="glow -top-32 right-0 size-120" aria-hidden="true"></div>
+  <div class="glow -bottom-40 -left-20 size-96 opacity-60" aria-hidden="true"></div>
+
+  <div class="container-page grid items-center gap-14 py-16 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:py-24">
+    <div>
+      <p class="inline-flex items-center gap-2 rounded-lg border-2 border-edge bg-raised px-3 py-1.5 font-mono text-xs shadow-hard-sm sm:text-sm">
+        <span class="text-accent">&gt;</span> repairs --near ossett<span class="cursor" aria-hidden="true">_</span>
+      </p>
+      <h1 id="hero-title" class="mt-7 text-5xl font-extrabold sm:text-6xl lg:text-7xl">
+        Honest repairs, explained in <span class="marker">plain English.</span>
+      </h1>
+      <p class="mt-7 max-w-xl text-lg text-muted sm:text-xl">
+        Repairs, servicing, virus removal and data recovery for homes and businesses. Plus compatible printer inks
+        and blank media, in stock.
+      </p>
+
+      <div class="mt-9 flex flex-wrap gap-4">
+        <a href="#services" class="btn-primary">
+          See what we fix <Icon name="arrow" class="size-5" />
+        </a>
+        <a href={business.directionsUrl} class="btn-ghost">
+          <Icon name="pin" class="size-5" /> Get directions
+        </a>
+      </div>
+
+      <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 font-mono text-sm">
+        {
+          ["Honest advice", "Quick response", "Home & business"].map((t) => (
+            <li class="flex items-center gap-2">
+              <span class="grid size-5 place-items-center rounded-sm bg-lime text-ink">
+                <Icon name="check" class="size-3.5" />
+              </span>
+              {t}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <RepairTicket />
+  </div>
+</section>
+
+<style>
+  .cursor {
+    animation: blink 1.1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor {
+      animation: none;
+    }
+  }
+</style>

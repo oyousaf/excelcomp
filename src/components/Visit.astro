@@ -1,0 +1,159 @@
+---
+import Icon from "./Icon.astro";
+import { business, formatSessions, fullAddress, notice, week } from "@/data/business";
+---
+
+<section id="visit" class="relative isolate overflow-hidden border-y-2 border-edge bg-ink py-20 text-paper sm:py-28" aria-labelledby="visit-title">
+  <div class="glow -top-24 right-1/4 size-104 bg-lime/10" aria-hidden="true"></div>
+  <div class="container-page grid gap-16 lg:grid-cols-2">
+    <div class="reveal">
+      <p class="label-mono text-lime">// Visit us</p>
+      <h2 id="visit-title" class="mt-4 text-4xl font-extrabold sm:text-5xl">Pop into the shop</h2>
+      <address class="mt-6 font-mono text-lg leading-relaxed text-paper/85 not-italic">
+        {business.address.building}<br />
+        {business.address.street}, {business.address.town}<br />
+        {business.address.postcode}
+      </address>
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href={business.directionsUrl} class="btn-primary">
+          <Icon name="pin" class="size-5" /> Get directions
+        </a>
+        <a href={`mailto:${business.email}`} class="btn press border-paper/70 bg-ink text-paper [--color-shadow:var(--color-lime)] hover:border-lime">
+          <Icon name="mail" class="size-5" /> Email Simon
+        </a>
+      </div>
+
+      <dl class="mt-10 grid gap-4 xs:grid-cols-2">
+        {
+          business.phones.map((p) => (
+            <div class="rounded-xl border-2 border-white/15 p-5 transition-colors duration-300 hover:border-lime/60">
+              <dt class="label-mono text-paper/70">{p.label}</dt>
+              <dd class="mt-1">
+                <a href={p.href} class="font-display text-2xl font-bold transition-colors hover:text-lime">{p.display}</a>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <a
+        href={business.directionsUrl}
+        class="group mt-10 block overflow-hidden rounded-2xl border-2 border-white/15 transition-colors duration-300 hover:border-lime/60"
+      >
+        <span class="sr-only">Open {fullAddress} in Google Maps</span>
+        <svg viewBox="0 0 600 240" class="block h-auto w-full" aria-hidden="true">
+          <defs>
+            <pattern id="map-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M24 0H0v24" fill="none" stroke="#1d251e" stroke-width="1" />
+            </pattern>
+          </defs>
+          <rect width="600" height="240" fill="#121813" />
+          <rect width="600" height="240" fill="url(#map-grid)" />
+          <g stroke="#2a342b" stroke-width="16" fill="none" stroke-linecap="round">
+            <path d="M-20 60 C 150 80, 260 30, 620 50" />
+            <path d="M-20 190 C 180 170, 380 220, 620 180" />
+            <path d="M150 -20 C 170 90, 130 160, 170 260" />
+            <path d="M440 -20 C 410 100, 470 150, 430 260" />
+          </g>
+          <path d="M-20 125 C 160 105, 420 145, 620 115" stroke="#53e800" stroke-width="6" fill="none" stroke-dasharray="2 10" stroke-linecap="round" opacity=".6" />
+          <g transform="translate(300 118)">
+            <circle r="30" fill="#53e800" opacity=".15" class="origin-center transition-transform duration-700 ease-spring group-hover:scale-150" />
+            <path d="M0 14s-15-13-15-25a15 15 0 0130 0c0 12-15 25-15 25z" fill="#53e800" transform="translate(0 -14)" />
+            <circle cy="-25" r="5" fill="#0b0f0c" />
+          </g>
+          <text x="300" y="178" text-anchor="middle" fill="#f7f8f2" font-size="13" font-family="ui-monospace, monospace" letter-spacing="2">BANK ST · OSSETT</text>
+        </svg>
+      </a>
+    </div>
+
+    <div class="reveal">
+      <div class="relative mx-auto max-w-sm pt-14">
+        <svg viewBox="0 0 200 60" class="absolute inset-x-0 top-0 mx-auto w-48" aria-hidden="true">
+          <path d="M30 58 L100 8 L170 58" fill="none" stroke="#a3ad9f" stroke-width="2" />
+          <circle cx="100" cy="8" r="6" fill="#53e800" stroke="#0b0f0c" stroke-width="2" />
+        </svg>
+        <div
+          data-door-sign
+          class="sign relative origin-top rounded-2xl border-4 border-paper bg-ink-soft px-6 py-7 text-center shadow-[0_20px_60px_-20px_rgb(83_232_0/0.35)]"
+        >
+          <p class="label-mono text-paper/60" data-status-lead>The shop is</p>
+          <p
+            class="mt-1 font-display text-6xl font-extrabold tracking-tight text-paper is-closed:text-amber is-open:text-lime"
+            data-status-short
+          >
+            Hours
+          </p>
+          <p class="mt-2 text-paper/75" data-status-detail>Reduced hours for now</p>
+        </div>
+      </div>
+
+      {
+        notice.active && (
+          <div class="mt-10 rounded-xl border-2 border-ink bg-amber p-5 text-ink shadow-[5px_5px_0_0_var(--color-lime)]" role="note">
+            <p class="label-mono">{notice.title}</p>
+            <p class="mt-2">{notice.body}</p>
+          </div>
+        )
+      }
+
+      <table class="mt-8 w-full text-left font-mono text-sm sm:text-base">
+        <caption class="sr-only">Opening hours</caption>
+        <thead class="sr-only">
+          <tr><th scope="col">Day</th><th scope="col">Hours</th></tr>
+        </thead>
+        <tbody>
+          {
+            week.map((d) => (
+              <tr data-day={d.key} class="border-b border-dashed border-white/15 data-today:text-lime">
+                <th scope="row" class="py-3.5 pr-4 font-normal uppercase">
+                  {d.name}
+                </th>
+                <td class="py-3.5 text-right tabular-nums">
+                  {formatSessions(d)}
+                  {d.note && <span class="block text-xs text-paper/70">{d.note}</span>}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="mt-5 text-paper/70">Coming from further afield? Give us a ring first so we can make sure we're in.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    .sign {
+      animation: sway 6s ease-in-out infinite alternate;
+    }
+    .sign:hover {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes sway {
+    from {
+      rotate: -1.2deg;
+    }
+    to {
+      rotate: 1.2deg;
+    }
+  }
+</style>
+
+<script>
+  import { animate } from "motion/mini";
+
+  const sign = document.querySelector<HTMLElement>("[data-door-sign]");
+  if (sign && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // Flip the sign round once it scrolls into view.
+    const io = new IntersectionObserver(([e]) => {
+      if (!e?.isIntersecting) return;
+      io.disconnect();
+      animate(sign, { transform: ["perspective(600px) rotateY(-90deg)", "perspective(600px) rotateY(0deg)"] }, { duration: 1.1, ease: [0.34, 1.4, 0.64, 1] });
+    }, { threshold: 0.6 });
+    io.observe(sign);
+  }
+</script>

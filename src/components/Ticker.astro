@@ -1,0 +1,64 @@
+---
+import Icon from "./Icon.astro";
+
+const items = [
+  "Cracked screens",
+  "Sticky keyboards",
+  "Virus removal",
+  "Data recovery",
+  "Noisy fans",
+  "New batteries",
+  "Epson inks",
+  "Blu-ray discs",
+  "Slow PCs",
+  "Won't boot",
+];
+---
+
+<div class="ticker relative flex items-center overflow-hidden border-b-2 border-edge bg-ink text-paper">
+  <div class="flex grow overflow-hidden mask-x-from-90%" aria-hidden="true">
+    <ul class="ticker-track flex w-max shrink-0 animate-ticker items-center py-3.5 font-mono text-sm uppercase">
+      {
+        [...items, ...items].map((t) => (
+          <li class="flex items-center gap-6 px-3">
+            {t}
+            <span class="text-lime">✦</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <p class="sr-only">We fix {items.join(", ")}.</p>
+  <button
+    type="button"
+    data-ticker-toggle
+    aria-pressed="false"
+    aria-label="Pause scrolling text"
+    class="group mx-2 grid size-10 shrink-0 place-items-center rounded-lg border border-white/25 text-lime transition-colors hover:bg-white/10 motion-reduce:hidden"
+  >
+    <Icon name="pause" class="size-4 group-aria-pressed:hidden" />
+    <Icon name="play" class="hidden size-4 group-aria-pressed:block" />
+  </button>
+</div>
+
+<style>
+  .ticker:has([aria-pressed="true"]) .ticker-track {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-ticker-toggle]").forEach((b) =>
+    b.addEventListener("click", () => {
+      const paused = b.getAttribute("aria-pressed") !== "true";
+      b.setAttribute("aria-pressed", String(paused));
+      b.setAttribute("aria-label", paused ? "Play scrolling text" : "Pause scrolling text");
+    }),
+  );
+</script>

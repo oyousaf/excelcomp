@@ -1,0 +1,245 @@
+@import "tailwindcss";
+
+/* Follows the device theme unless the visitor picks one with the toggle,
+   which sets data-theme on <html>. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
+/* Set on <html> by the open-now script */
+@custom-variant is-open (&:where([data-open="true"], [data-open="true"] *));
+@custom-variant is-closed (&:where([data-open="false"], [data-open="false"] *));
+
+@theme {
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, monospace;
+
+  /* Brand constants: identical in both themes */
+  --color-ink: #0b0f0c;
+  --color-ink-soft: #161c17;
+  --color-paper: #f7f8f2;
+  --color-lime: #53e800;
+  --color-lime-deep: #46c400;
+  --color-leaf: #2d7a00;
+  --color-amber: #ffc23d;
+
+  /* Semantic tokens: swapped per theme below */
+  --color-surface: #f2f4ec;
+  --color-raised: #ffffff;
+  --color-fg: #0b0f0c;
+  --color-muted: #565e55;
+  --color-accent: #2d7a00;
+  --color-line: #d5dacd;
+  --color-edge: #0b0f0c;
+  --color-shadow: #0b0f0c;
+  --color-grid: #e2e6da;
+  --color-glow: rgb(83 232 0 / 0.16);
+
+  --shadow-hard-sm: 2px 2px 0 0 var(--color-shadow);
+  --shadow-hard: 5px 5px 0 0 var(--color-shadow);
+  --shadow-hard-lg: 9px 9px 0 0 var(--color-shadow);
+
+  --breakpoint-xs: 30rem;
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Damped spring with a gentle 4% overshoot */
+  --ease-spring: linear(
+    0, 0.06, 0.182, 0.334, 0.489, 0.633, 0.756, 0.854, 0.929, 0.982, 1.017, 1.037, 1.046, 1.047, 1.044, 1.038,
+    1.03, 1.023, 1.016, 1.01, 1.006, 1.003, 1, 0.999, 0.998, 0.998, 0.998, 0.998, 0.998, 0.999, 0.999, 0.999, 1
+  );
+
+  --animate-ticker: ticker 40s linear infinite;
+
+  @keyframes ticker {
+    to {
+      translate: -50% 0;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --color-surface: #101511;
+      --color-raised: #171e18;
+      --color-fg: #f7f8f2;
+      --color-muted: #a3ad9f;
+      --color-accent: #53e800;
+      --color-line: #2a332b;
+      --color-edge: #4d5b4f;
+      --color-shadow: #2d7a00;
+      --color-grid: #182019;
+      --color-glow: rgb(83 232 0 / 0.1);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-surface: #101511;
+    --color-raised: #171e18;
+    --color-fg: #f7f8f2;
+    --color-muted: #a3ad9f;
+    --color-accent: #53e800;
+    --color-line: #2a332b;
+    --color-edge: #4d5b4f;
+    --color-shadow: #2d7a00;
+    --color-grid: #182019;
+    --color-glow: rgb(83 232 0 / 0.1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+    interpolate-size: allow-keywords;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-surface font-sans text-fg antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    /* Cutting-mat grid */
+    background-image:
+      linear-gradient(var(--color-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-position: -1px -1px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-balance;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    @apply rounded-sm outline-3 outline-offset-3 outline-accent;
+  }
+
+  ::selection {
+    @apply bg-lime text-ink;
+  }
+
+  /* Theme switches cross-fade instead of snapping */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.35s;
+    animation-timing-function: var(--ease-out-quint);
+  }
+}
+
+@utility container-page {
+  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+}
+
+@utility label-mono {
+  @apply font-mono text-xs font-medium tracking-wider uppercase;
+}
+
+/* Lifts towards the cursor on a spring, presses into its shadow when clicked */
+@utility press {
+  @apply shadow-hard transition-[translate,box-shadow,background-color,color,border-color] duration-500 ease-spring;
+
+  @media (hover: hover) {
+    &:hover {
+      @apply -translate-x-0.5 -translate-y-0.5 shadow-hard-lg;
+    }
+  }
+
+  &:active {
+    @apply translate-x-1 translate-y-1 shadow-none duration-150;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @apply transition-colors;
+  }
+}
+
+@utility btn {
+  @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-edge px-6 font-display text-base font-bold;
+}
+
+@layer components {
+  .btn-primary {
+    @apply btn press border-ink bg-lime text-ink hover:bg-lime-deep;
+  }
+
+  .btn-ghost {
+    @apply btn press bg-raised text-fg;
+  }
+
+  /* Hand-drawn highlighter stroke behind a word */
+  .marker {
+    @apply relative isolate whitespace-nowrap;
+
+    &::before {
+      content: "";
+      @apply absolute -inset-x-1.5 top-[55%] bottom-[2%] -z-10 -rotate-1 rounded-[0.4em_0.2em_0.5em_0.25em] bg-lime/85 dark:bg-lime/30;
+    }
+  }
+
+  /* Sections fade up as they scroll into view. Browsers without scroll-driven
+     animations, and anyone preferring reduced motion, just see the content. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation: reveal linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 35%;
+      }
+    }
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      /* transform, not translate, so hover lifts still work afterwards */
+      transform: translateY(1.25rem);
+    }
+  }
+
+  .glow {
+    @apply pointer-events-none absolute -z-10 rounded-full bg-(--color-glow) blur-3xl;
+  }
+
+  /* Torn receipt edges */
+  .zigzag {
+    --zz: 9px;
+    mask:
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--zz) * 2) var(--zz) repeat-x,
+      conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--zz) * 2) var(--zz) repeat-x,
+      linear-gradient(#000 0 0) center / 100% calc(100% - var(--zz) * 2 + 1px) no-repeat;
+  }
+
+  /* Perforated tear-off line */
+  .perforated {
+    background-image: radial-gradient(circle, var(--color-surface) 4px, transparent 4.5px);
+    background-size: 16px 12px;
+    background-repeat: repeat-x;
+    background-position: center;
+  }
+}

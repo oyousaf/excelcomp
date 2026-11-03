@@ -1,0 +1,50 @@
+[
+  {
+    "id": "repairs",
+    "order": 1,
+    "title": "Computer & laptop repairs",
+    "icon": "laptop",
+    "summary": "From cracked screens and broken keyboards to machines that run slowly or won't start at all.",
+    "points": ["Screens, keyboards and hinges", "Slow, freezing or won't boot", "Home and business machines"]
+  },
+  {
+    "id": "virus-removal",
+    "order": 2,
+    "title": "Virus removal & antivirus",
+    "icon": "shield",
+    "summary": "We clear out viruses, spyware and pop-ups, then set up protection that keeps running quietly in the background.",
+    "points": ["Malware and spyware removal", "Antivirus installed and configured", "Firewall and safe-browsing setup"]
+  },
+  {
+    "id": "servicing",
+    "order": 3,
+    "title": "Servicing & upgrades",
+    "icon": "fan",
+    "summary": "Fans, hard drives and batteries wear out over time. We clean, replace and upgrade parts to keep things running.",
+    "points": ["Noisy or overheating fans", "Failing hard drives replaced", "Laptop and tablet batteries"]
+  },
+  {
+    "id": "data-recovery",
+    "order": 4,
+    "title": "Data recovery",
+    "icon": "drive",
+    "summary": "Lost, deleted or corrupted files recovered from desktops, laptops, servers and external drives wherever possible.",
+    "points": ["Accidentally deleted files", "Drives that won't mount", "Backups restored"]
+  },
+  {
+    "id": "printer-inks",
+    "order": 5,
+    "title": "Printer inks",
+    "icon": "ink",
+    "summary": "A large stock of compatible inks at low prices. We specialise in Epson, old models and new.",
+    "points": ["Epson specialist", "Canon, HP, Kodak and Brother compatibles", "Call in to check stock"]
+  },
+  {
+    "id": "blank-media",
+    "order": 6,
+    "title": "Blank CDs, DVDs & Blu-ray",
+    "icon": "disc",
+    "summary": "Ritek DVD-R and dual-layer DVD+R, plus Blu-ray discs, in printable or plain finishes.",
+    "points": ["Packs of 1, 10, 25 or 50", "Full-face printable or plain", "Dual layer for bigger files"]
+  }
+]

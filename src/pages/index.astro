@@ -1,0 +1,76 @@
+---
+import Base from "@/layouts/Base.astro";
+import Hero from "@/components/Hero.astro";
+import Ticker from "@/components/Ticker.astro";
+import Services from "@/components/Services.astro";
+import Stock from "@/components/Stock.astro";
+import Reviews from "@/components/Reviews.astro";
+import Visit from "@/components/Visit.astro";
+import Faq from "@/components/Faq.astro";
+import ContactForm from "@/components/ContactForm.astro";
+import { business, week } from "@/data/business";
+
+const dayOfWeek = {
+  mon: "Monday",
+  tue: "Tuesday",
+  wed: "Wednesday",
+  thu: "Thursday",
+  fri: "Friday",
+  sat: "Saturday",
+  sun: "Sunday",
+} as const;
+
+const site = Astro.site!.href.replace(/\/$/, "");
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["ComputerStore", "LocalBusiness"],
+      "@id": `${site}/#business`,
+      name: business.name,
+      url: site,
+      image: `${site}/og.png`,
+      email: business.email,
+      telephone: business.phones[0].href.replace("tel:", ""),
+      priceRange: "££",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: `${business.address.building}, ${business.address.street}`,
+        addressLocality: business.address.town,
+        addressRegion: business.address.region,
+        postalCode: business.address.postcode,
+        addressCountry: business.address.country,
+      },
+      geo: { "@type": "GeoCoordinates", latitude: business.geo.lat, longitude: business.geo.lng },
+      hasMap: business.directionsUrl,
+      areaServed: ["Ossett", "Wakefield", "Dewsbury", "Horbury"],
+      openingHoursSpecification: week.flatMap((d) =>
+        d.sessions.map((s) => ({
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: `https://schema.org/${dayOfWeek[d.key]}`,
+          opens: s.open,
+          closes: s.close,
+        })),
+      ),
+      sameAs: business.social.map((s) => s.href),
+    },
+    { "@type": "WebSite", "@id": `${site}/#website`, name: business.name, url: site },
+  ],
+};
+---
+
+<Base
+  title="Computer & Laptop Repairs in Ossett | Excel Computer Solutions"
+  description="Honest computer and laptop repairs, virus removal, data recovery and servicing in Ossett, plus compatible Epson printer inks and blank media in stock."
+  jsonLd={jsonLd}
+>
+  <Hero />
+  <Ticker />
+  <Services />
+  <Stock />
+  <Reviews />
+  <Visit />
+  <ContactForm />
+  <Faq />
+</Base>

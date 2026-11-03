@@ -1,0 +1,172 @@
+---
+import Icon from "./Icon.astro";
+import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import { business, notice } from "@/data/business";
+
+const links = [
+  { href: "/#services", label: "Services" },
+  { href: "/#reviews", label: "Reviews" },
+  { href: "/#visit", label: "Visit us" },
+  { href: "/#contact", label: "Contact" },
+];
+const [phone] = business.phones;
+---
+
+{
+  notice.active && (
+    <div class="border-b-2 border-ink bg-amber text-ink">
+      <p class="container-page flex flex-wrap items-center justify-center gap-x-3 py-2 text-center text-sm">
+        <span class="label-mono rounded-sm bg-ink px-1.5 py-0.5 text-amber">Notice</span>
+        <strong class="font-display">{notice.title}.</strong>
+        <a href="/#visit" class="underline decoration-2 underline-offset-3 hover:no-underline">
+          See this week's hours
+        </a>
+      </p>
+    </div>
+  )
+}
+
+<header class="sticky top-0 z-50 border-b-2 border-edge bg-surface/85 backdrop-blur-md">
+  <div class="container-page flex h-18 items-center justify-between gap-3">
+    <a href="/" class="rounded-xl">
+      <Logo />
+    </a>
+
+    <nav aria-label="Main" class="hidden md:block">
+      <ul class="flex items-center gap-1">
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} class="nav-link relative isolate block px-3.5 py-2.5 font-display font-semibold">
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2.5">
+      <ThemeToggle />
+      <a href={phone.href} class="btn-primary min-h-11 px-4">
+        <Icon name="phone" class="size-5" />
+        <span class="hidden lg:inline">{phone.display}</span>
+        <span class="lg:hidden">Call</span>
+      </a>
+      <button
+        type="button"
+        popovertarget="mobile-menu"
+        class="grid size-11 place-items-center rounded-xl border-2 border-edge bg-raised shadow-hard-sm md:hidden"
+        aria-label="Open menu"
+      >
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav
+  id="mobile-menu"
+  popover
+  aria-label="Mobile"
+  class="mobile-menu inset-0 m-0 size-full max-h-none max-w-none bg-surface p-0 text-fg md:hidden"
+>
+  <div class="container-page flex h-18 items-center justify-between border-b-2 border-edge">
+    <Logo />
+    <button
+      type="button"
+      popovertarget="mobile-menu"
+      popovertargetaction="hide"
+      class="grid size-11 place-items-center rounded-xl border-2 border-edge bg-raised shadow-hard-sm"
+      aria-label="Close menu"
+    >
+      <Icon name="close" />
+    </button>
+  </div>
+  <ul class="container-page mt-4 grid">
+    {
+      links.map((l, i) => (
+        <li>
+          <a
+            href={l.href}
+            data-close-menu
+            class="group flex items-center gap-4 border-b border-line py-5 font-display text-3xl font-bold"
+          >
+            <span class="label-mono text-accent">0{i + 1}</span>
+            {l.label}
+            <Icon name="arrow" class="ml-auto size-6 text-accent transition-transform duration-500 ease-spring group-hover:translate-x-1" />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="container-page mt-8 grid gap-3">
+    {
+      business.phones.map((p) => (
+        <a href={p.href} class="btn-ghost justify-between">
+          <span class="label-mono">{p.label}</span>
+          <span>{p.display}</span>
+        </a>
+      ))
+    }
+  </div>
+</nav>
+
+<style>
+  /* Lime marker that sweeps in under the link */
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    inset: auto 0.875rem 0.45rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--color-lime);
+    opacity: 0.85;
+    z-index: -1;
+    scale: 0 1;
+    transform-origin: right;
+    transition: scale 0.55s var(--ease-spring);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    scale: 1 1;
+    transform-origin: left;
+  }
+
+  .mobile-menu {
+    transition:
+      opacity 0.3s var(--ease-out-quint),
+      translate 0.5s var(--ease-spring),
+      display 0.3s allow-discrete,
+      overlay 0.3s allow-discrete;
+    opacity: 0;
+    translate: 0 -1rem;
+  }
+
+  .mobile-menu:popover-open {
+    opacity: 1;
+    translate: 0 0;
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 -1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link::after,
+    .mobile-menu {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Anchor links don't dismiss a popover on their own.
+  const menu = document.getElementById("mobile-menu");
+  menu?.addEventListener("click", (e) => {
+    if ((e.target as Element).closest("[data-close-menu]")) menu.hidePopover();
+  });
+</script>

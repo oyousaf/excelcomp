@@ -1,0 +1,26 @@
+[
+  {
+    "id": "home-and-business",
+    "order": 1,
+    "question": "Do you work on business computers as well as home ones?",
+    "answer": "Yes. We help both households and local businesses, and we know how much it matters to get you back up and running quickly."
+  },
+  {
+    "id": "data",
+    "order": 2,
+    "question": "My computer won't turn on. Can my files be saved?",
+    "answer": "Often, yes. Data can usually be recovered from a laptop, desktop or external drive even when the machine itself has failed. Bring it in or call and we'll talk you through it."
+  },
+  {
+    "id": "inks",
+    "order": 3,
+    "question": "Which printer inks do you stock?",
+    "answer": "We specialise in compatible Epson inks for old and new models, and stock most Canon, HP, Kodak and Brother compatibles too. Call ahead if you'd like us to check a cartridge for you."
+  },
+  {
+    "id": "explain",
+    "order": 4,
+    "question": "I'm not very technical. Will you explain what's wrong?",
+    "answer": "Absolutely. We explain the problem and the options in plain English before any work goes ahead, so you can decide what's right for you."
+  }
+]

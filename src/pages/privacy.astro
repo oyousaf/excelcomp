@@ -1,0 +1,33 @@
+---
+import Base from "@/layouts/Base.astro";
+import { business, fullAddress } from "@/data/business";
+---
+
+<Base title="Privacy | Excel Computer Solutions" description="How Excel Computer Solutions handles the information you send through this website.">
+  <article class="container-page max-w-3xl py-20 sm:py-28">
+    <p class="label-mono text-accent">Privacy</p>
+    <h1 class="mt-4 text-5xl font-extrabold">Your privacy</h1>
+    <div class="mt-10 grid gap-8 text-lg [&_h2]:text-2xl [&_h2]:font-bold [&_p]:mt-3 [&_p]:text-muted">
+      <section>
+        <h2>Who we are</h2>
+        <p>{business.name}, {fullAddress}. You can contact us at <a class="text-accent underline" href={`mailto:${business.email}`}>{business.email}</a>.</p>
+      </section>
+      <section>
+        <h2>What we collect</h2>
+        <p>If you use the contact form, we receive your name, email address, optional phone number and your message. We use these only to reply to your enquiry.</p>
+      </section>
+      <section>
+        <h2>Cookies and tracking</h2>
+        <p>This website does not use cookies, analytics or advertising trackers.</p>
+      </section>
+      <section>
+        <h2>How long we keep it</h2>
+        <p>Enquiries are kept only as long as needed to help you, then deleted. You can ask us to see or delete your information at any time by emailing us.</p>
+      </section>
+      <section>
+        <h2>Complaints</h2>
+        <p>If you're unhappy with how we've handled your information, you can contact the Information Commissioner's Office at ico.org.uk.</p>
+      </section>
+    </div>
+  </article>
+</Base>

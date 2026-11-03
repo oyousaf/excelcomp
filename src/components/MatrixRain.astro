@@ -1,0 +1,111 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<canvas
+  data-matrix
+  aria-hidden="true"
+  class:list={[
+    "pointer-events-none absolute inset-0 -z-10 size-full opacity-20 mask-x-from-60% mask-y-from-50% lg:opacity-35 dark:opacity-30 dark:lg:opacity-55",
+    className,
+  ]}></canvas>
+
+<script>
+  // Subtle falling-code backdrop. Starts after the page has settled, runs at
+  // ~20fps, stops while off-screen, and draws one still frame for anyone who
+  // prefers reduced motion.
+  const GLYPHS = "01001101ECS0x7F{}<>/=;#&$01ABCDEF10110";
+  const FONT_SIZE = 15;
+  const FRAME_MS = 50;
+
+  for (const canvas of document.querySelectorAll<HTMLCanvasElement>("[data-matrix]")) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) continue;
+
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+    let drops: number[] = [];
+    let running = false;
+    let inView = false;
+    let last = 0;
+    let colour = "";
+
+    const readColour = () => {
+      colour = getComputedStyle(canvas).getPropertyValue("--color-accent").trim() || "#53e800";
+    };
+
+    const resize = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const { width, height } = canvas.getBoundingClientRect();
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const columns = Math.ceil(width / FONT_SIZE);
+      drops = Array.from({ length: columns }, () => Math.random() * -(height / FONT_SIZE));
+      readColour();
+      if (reduce.matches) still(height);
+    };
+
+    const glyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]!;
+
+    const draw = () => {
+      const { width, height } = canvas.getBoundingClientRect();
+      // Fade the previous frame towards transparent to leave short trails.
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.fillStyle = "rgba(0,0,0,0.12)";
+      ctx.fillRect(0, 0, width, height);
+      ctx.globalCompositeOperation = "source-over";
+      ctx.font = `${FONT_SIZE}px ui-monospace, monospace`;
+      ctx.fillStyle = colour;
+      drops.forEach((y, i) => {
+        ctx.fillText(glyph(), i * FONT_SIZE, y * FONT_SIZE);
+        drops[i] = y * FONT_SIZE > height && Math.random() > 0.975 ? 0 : y + 1;
+      });
+    };
+
+    const still = (height: number) => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = `${FONT_SIZE}px ui-monospace, monospace`;
+      ctx.fillStyle = colour;
+      drops.forEach((_, i) => {
+        const len = Math.floor(Math.random() * 8);
+        const start = Math.random() * (height / FONT_SIZE);
+        for (let j = 0; j < len; j++) {
+          ctx.globalAlpha = 1 - j / len;
+          ctx.fillText(glyph(), i * FONT_SIZE, (start - j) * FONT_SIZE);
+        }
+      });
+      ctx.globalAlpha = 1;
+    };
+
+    const loop = (t: number) => {
+      if (!running) return;
+      if (t - last >= FRAME_MS) {
+        last = t;
+        draw();
+      }
+      requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+      if (running || !inView || document.hidden || reduce.matches) return;
+      running = true;
+      requestAnimationFrame(loop);
+    };
+
+    new IntersectionObserver(([entry]) => {
+      inView = !!entry?.isIntersecting;
+      if (inView) start();
+      else running = false;
+    }).observe(canvas);
+
+    new ResizeObserver(resize).observe(canvas);
+    new MutationObserver(readColour).observe(document.documentElement, { attributeFilter: ["data-theme"] });
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColour);
+    reduce.addEventListener("change", () => (reduce.matches ? (running = false) : start()));
+    document.addEventListener("visibilitychange", () => (document.hidden ? (running = false) : start()));
+  }
+</script>

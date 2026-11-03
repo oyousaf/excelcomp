@@ -1,0 +1,81 @@
+---
+import Icon from "./Icon.astro";
+import { business, week } from "@/data/business";
+
+const [phone] = business.phones;
+const rows = [
+  ["Device", "Laptops · PCs · Printers"],
+  ["Fault", "Slow · Broken · Infected"],
+  ["Fix", "Plain English, no jargon"],
+];
+---
+
+<div class="relative mx-auto w-full max-w-md lg:mr-0">
+  <div
+    class="ticket relative rotate-1 overflow-hidden rounded-2xl border-2 border-edge bg-raised shadow-hard-lg transition-[rotate,translate,box-shadow] duration-700 ease-spring hover:-translate-y-1 hover:rotate-0"
+  >
+    <div class="flex items-center justify-between bg-ink px-5 py-3 text-lime">
+      <span class="label-mono">Job ticket</span>
+      <span class="label-mono text-paper/70">No. 0583</span>
+    </div>
+
+    <div class="p-6" aria-live="polite">
+      <p class="label-mono text-muted">Shop status</p>
+      <p class="mt-2 flex items-center gap-3 font-display text-3xl font-extrabold">
+        <span class="relative flex size-3.5">
+          <span class="absolute inline-flex size-full rounded-full bg-lime opacity-0 is-open:animate-ping is-open:opacity-60 motion-reduce:animate-none"></span>
+          <span class="relative inline-flex size-3.5 rounded-full bg-muted is-closed:bg-amber is-open:bg-lime"></span>
+        </span>
+        <span data-status-text>Opening hours</span>
+      </p>
+      <p class="mt-1 min-h-6 text-muted" data-status-detail>Reduced hours for now</p>
+
+      <ol class="mt-5 grid grid-cols-7 gap-1.5" aria-label="Days open this week">
+        {
+          week.map((d) => (
+            <li
+              data-day={d.key}
+              class:list={[
+                "group grid aspect-square place-items-center rounded-lg border-2 font-mono text-xs font-semibold transition-colors",
+                d.sessions.length ? "border-ink bg-lime text-ink" : "border-line text-muted",
+                "data-today:ring-3 data-today:ring-accent/40 data-today:ring-offset-2 data-today:ring-offset-raised",
+              ]}
+            >
+              <span aria-hidden="true">{d.name[0]}</span>
+              <span class="sr-only">{d.name}: {d.sessions.length ? "open" : "closed"}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="perforated h-3 border-y border-dashed border-line" aria-hidden="true"></div>
+
+    <dl class="grid gap-2 px-6 py-5 font-mono text-sm">
+      {
+        rows.map(([k, v]) => (
+          <div class="flex gap-4">
+            <dt class="w-16 shrink-0 text-muted uppercase">{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div class="px-6 pb-6">
+      <a href={phone.href} class="btn-primary w-full">
+        <Icon name="phone" class="size-5" /> Call {phone.display}
+      </a>
+    </div>
+  </div>
+
+  <span
+    class="stamp pointer-events-none absolute -top-11 right-6 rotate-6 bg-raised/80 backdrop-blur-sm rounded-lg border-3 border-double border-accent px-3 py-1.5 font-mono text-sm font-semibold tracking-widest text-accent uppercase"
+    aria-hidden="true">Honest advice</span
+  >
+</div>
+
+<script>
+  import { bindStatus } from "@/lib/status";
+  bindStatus();
+</script>

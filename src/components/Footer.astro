@@ -1,0 +1,78 @@
+---
+import Icon from "./Icon.astro";
+import { business, fullAddress } from "@/data/business";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative isolate overflow-hidden bg-ink text-paper">
+  <div class="glow -bottom-32 left-1/2 h-64 w-3/4 -translate-x-1/2 bg-lime/10" aria-hidden="true"></div>
+  <div class="container-page grid gap-10 pt-16 pb-10 sm:grid-cols-3">
+    <div>
+      <h2 class="label-mono text-lime">Call</h2>
+      <ul class="mt-4 grid gap-2 font-mono text-sm">
+        {
+          business.phones.map((p) => (
+            <li>
+              <a href={p.href} class="inline-flex gap-3 py-1 transition-colors hover:text-lime">
+                <span class="w-14 text-paper/60">{p.label}</span>
+                {p.display}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h2 class="label-mono text-lime">Write</h2>
+      <a href={`mailto:${business.email}`} class="mt-4 inline-flex items-center gap-2 py-1 font-mono text-sm break-all transition-colors hover:text-lime">
+        {business.email}
+      </a>
+      <ul class="mt-2 flex gap-3 font-mono text-sm">
+        {
+          business.social.map((s) => (
+            <li>
+              <a href={s.href} class="inline-flex items-center gap-2 py-1 transition-colors hover:text-lime" rel="me noopener">
+                {s.label} <Icon name="external" class="size-4" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h2 class="label-mono text-lime">Visit</h2>
+      <address class="mt-4 font-mono text-sm leading-relaxed text-paper/85 not-italic">{fullAddress}</address>
+      <a href={business.directionsUrl} class="mt-2 inline-flex items-center gap-2 py-1 font-mono text-sm text-lime hover:underline">
+        Get directions <Icon name="external" class="size-4" />
+      </a>
+    </div>
+  </div>
+
+  <div class="container-page" aria-hidden="true">
+    <p class="wordmark font-display leading-[0.8] font-extrabold tracking-tighter select-none">
+      Excel<span class="text-lime">.</span>
+    </p>
+  </div>
+
+  <div class="border-t border-white/10">
+    <div class="container-page flex flex-wrap justify-between gap-4 py-6 font-mono text-xs text-paper/70">
+      <p>&copy; {year} {business.name}</p>
+      <a href="/privacy" class="py-1 hover:text-lime">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .wordmark {
+    font-size: clamp(5rem, 24vw, 19rem);
+    background: linear-gradient(180deg, var(--color-paper) 30%, color-mix(in oklab, var(--color-paper) 15%, transparent));
+    background-clip: text;
+    color: transparent;
+    margin-bottom: -0.08em;
+  }
+
+  .wordmark span {
+    -webkit-text-fill-color: var(--color-lime);
+  }
+</style>
