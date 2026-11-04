@@ -43,18 +43,18 @@ export const business = {
 } as const;
 
 export const notice = {
-  active: true,
-  title: "Reduced opening hours",
-  body: "We're open shorter hours for the time being and will be back to normal as soon as possible. Thanks for your patience.",
+  active: false,
+  title: "",
+  body: "",
 } as const;
 
 export const week: Day[] = [
-  { key: "mon", name: "Monday", sessions: [], note: "Closed until further notice" },
-  { key: "tue", name: "Tuesday", sessions: [{ open: "09:00", close: "12:30" }] },
+  { key: "mon", name: "Monday", sessions: [{ open: "09:00", close: "16:30" }] },
+  { key: "tue", name: "Tuesday", sessions: [{ open: "09:00", close: "16:30" }] },
   { key: "wed", name: "Wednesday", sessions: [] },
-  { key: "thu", name: "Thursday", sessions: [{ open: "09:00", close: "12:30" }] },
-  { key: "fri", name: "Friday", sessions: [{ open: "09:00", close: "12:30" }] },
-  { key: "sat", name: "Saturday", sessions: [] },
+  { key: "thu", name: "Thursday", sessions: [{ open: "09:00", close: "16:30" }] },
+  { key: "fri", name: "Friday", sessions: [{ open: "09:00", close: "16:00" }] },
+  { key: "sat", name: "Saturday", sessions: [{ open: "09:00", close: "13:00" }] },
   { key: "sun", name: "Sunday", sessions: [] },
 ];
 
